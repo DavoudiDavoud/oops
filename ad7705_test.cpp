@@ -201,11 +201,7 @@ int main(int argc, char *argv[])
 	  // read the data register by performing two 8 bit reads
 	  value2 = readData(fd)-0x8000;
 		// if stdout is redirected to a file or pipe, output the data
-		if( no_tty )
-		{
-			printf("%d\n", value);
-			fflush(stdout);
-		}
+		
 	}
 	writeReset(fd);
 
@@ -238,13 +234,9 @@ int main(int argc, char *argv[])
 	  // read the data register by performing two 8 bit reads
 	  value1 = readData(fd)-0x8000;
 		// if stdout is redirected to a file or pipe, output the data
-		if( no_tty )
-		{
-			printf("%d\n", value);
-			fflush(stdout);
-		}
+		
 	}
-	fprintf(stderr,"datach2 = %d  datach3  = %d     \r",value2, value1);
+	fprintf(stderr,"datach2 = %d  datach1  = %d     \r",value2, value1);
 	}
 	close(fd);
 	gpio_fd_close(sysfs_fd);
