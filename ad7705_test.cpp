@@ -178,17 +178,13 @@ int main(int argc, char *argv[])
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
 	
-
+	int count = 5;
 	
 
 	// we read data in an endless loop and display it
 	// this needs to run in a thread ideally
-	while (1) {
+	while (count) {
 	
-	 // tell the AD7705 that the next write will be the setup register
-	writeReg(fd,0x11);
-	// intiates a self calibration and then after that starts converting
-	writeReg(fd,0x40);
 	
 	 
 	  // let's wait for data for max one second
@@ -201,8 +197,8 @@ int main(int argc, char *argv[])
 	  writeReg(fd,0x39);
 	  // read the data register by performing two 8 bit reads
 	  int value = readData(fd)-0x8000;
-		fprintf(stderr,"data = %d       \r",value);
-
+		fprintf(stderr,"data2 = %d       \r",value);
+		printf = ("c = %d",count);
 		// if stdout is redirected to a file or pipe, output the data
 		if( no_tty )
 		{
@@ -210,7 +206,46 @@ int main(int argc, char *argv[])
 			fflush(stdout);
 		}
 	}
+	writeReset(fd);
 
+	writeReg(fd,0x21);
+	// write 00001100 : CLOCKDIV=1,CLK=1,expects 4.9152MHz input clock
+	writeReg(fd,0x0C);
+
+	// tell the AD7705 that the next write will be the setup register
+	writeReg(fd,0x11);
+	// intiates a self calibration and then after that starts converting
+	writeReg(fd,0x40);
+	
+	count = 5;
+	
+
+	// we read data in an endless loop and display it
+	// this needs to run in a thread ideally
+	while (count) {
+	
+	
+	 
+	  // let's wait for data for max one second
+	  ret = gpio_poll(sysfs_fd,1000);
+	  if (ret<1) {
+	    fprintf(stderr,"Poll error %d\n",ret);
+	  }
+
+	  // tell the AD7705 to read the data register (16 bits)
+	  writeReg(fd,0x39);
+	  // read the data register by performing two 8 bit reads
+	  int value = readData(fd)-0x8000;
+		fprintf(stderr,"data2 = %d       \r",value);
+		printf = ("c = %d",count);
+		// if stdout is redirected to a file or pipe, output the data
+		if( no_tty )
+		{
+			printf("%d\n", value);
+			fflush(stdout);
+		}
+	}
+	
 	close(fd);
 	gpio_fd_close(sysfs_fd);
 
