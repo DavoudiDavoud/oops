@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
 	  writeReg(fd,0x39);
 	  // read the data register by performing two 8 bit reads
 	  int value = readData(fd)-0x8000;
-		fprintf(stderr,"data1 = %d  count1 = %d     \r",value, count);
+		fprintf(stderr,"datach2 = %d  count1 = %d     \r",value, count);
 		// if stdout is redirected to a file or pipe, output the data
 		if( no_tty )
 		{
@@ -207,16 +207,16 @@ int main(int argc, char *argv[])
 	}
 	writeReset(fd);
 
-	writeReg(fd,0x21);
+	writeReg(fd,0x20);
 	// write 00001100 : CLOCKDIV=1,CLK=1,expects 4.9152MHz input clock
 	writeReg(fd,0x0C);
 
 	// tell the AD7705 that the next write will be the setup register
-	writeReg(fd,0x11);
+	writeReg(fd,0x10);
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
 	
-	count = 1000000;
+	count = 10000;
 	
 
 	// we read data in an endless loop and display it
@@ -232,10 +232,10 @@ int main(int argc, char *argv[])
 	  }
 
 	  // tell the AD7705 to read the data register (16 bits)
-	  writeReg(fd,0x39);
+	  writeReg(fd,0x38);
 	  // read the data register by performing two 8 bit reads
 	  int value = readData(fd)-0x8000;
-		fprintf(stderr,"data2 = %d count2 = %d    \n",value,count);
+		fprintf(stderr,"datach1 = %d count2 = %d    \n",value,count);
 		// if stdout is redirected to a file or pipe, output the data
 		if( no_tty )
 		{
