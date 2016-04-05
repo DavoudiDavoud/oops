@@ -169,8 +169,9 @@ int main(int argc, char *argv[])
 	
 	int value2;
 	int value1;
-	while(1){
 	writeReset(fd);
+	while(1){
+	
 
 	writeReg(fd,0x21);
 	// write 00001100 : CLOCKDIV=1,CLK=1,expects 4.9152MHz input clock
@@ -180,6 +181,10 @@ int main(int argc, char *argv[])
 	writeReg(fd,0x11);
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
+	ret = gpio_poll(sysfs_fd,1000);
+	  if (ret<1) {
+	    fprintf(stderr,"Poll error after ch2 setup %d\n",ret);
+	  }
 	
 	volatile int count = 10000;
 	
@@ -188,7 +193,7 @@ int main(int argc, char *argv[])
 	// this needs to run in a thread ideally
 	while (count) {
 	
-	
+	//ch2
 	 count = count - 1;
 	  // let's wait for data for max one second
 	  ret = gpio_poll(sysfs_fd,1000);
@@ -205,8 +210,9 @@ int main(int argc, char *argv[])
 		// if stdout is redirected to a file or pipe, output the data
 		
 	}
-	writeReset(fd);
+       fprintf(stderr,"chanel changed\n");
 
+	//ch1
 	writeReg(fd,0x20);
 	// write 00001100 : CLOCKDIV=1,CLK=1,expects 4.9152MHz input clock
 	writeReg(fd,0x0C);
@@ -215,6 +221,11 @@ int main(int argc, char *argv[])
 	writeReg(fd,0x10);
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
+	
+	ret = gpio_poll(sysfs_fd,1000);
+	  if (ret<1) {
+	    fprintf(stderr,"Poll error after ch1 setup %d\n",ret);
+	  }
 	
 	count = 10000;
 	
@@ -240,6 +251,8 @@ int main(int argc, char *argv[])
 		// if stdout is redirected to a file or pipe, output the data
 		
 	}
+       fprintf(stderr,"chanel changed\n");
+
 	}
 	close(fd);
 	gpio_fd_close(sysfs_fd);
