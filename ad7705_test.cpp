@@ -171,6 +171,11 @@ int main(int argc, char *argv[])
         printf("sending reset\n");
 	writeReset(fd);
 
+	
+
+	// we read data in an endless loop and display it
+	// this needs to run in a thread ideally
+	while (1) {
 	// tell the AD7705 that the next write will be to the clock register
 	writeReg(fd,0x21);
 	// write 00001100 : CLOCKDIV=1,CLK=1,expects 4.9152MHz input clock
@@ -180,10 +185,6 @@ int main(int argc, char *argv[])
 	writeReg(fd,0x11);
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
-
-	// we read data in an endless loop and display it
-	// this needs to run in a thread ideally
-	while (1) {
 
 	  // let's wait for data for max one second
 	  ret = gpio_poll(sysfs_fd,1000);
