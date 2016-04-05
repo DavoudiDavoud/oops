@@ -115,7 +115,27 @@ static int readData(int fd)
 	return (rx1[0]<<8)|(rx1[1]);
 }
 
+int ch2(void){
+	// tell the AD7705 that the next write will be to the clock register
+	writeReg(fd,0x21);
+	// write 00001100 : CLOCKDIV=1,CLK=1,expects 4.9152MHz input clock
+	writeReg(fd,0x0C);
 
+	// tell the AD7705 that the next write will be the setup register
+	writeReg(fd,0x11);
+	// intiates a self calibration and then after that starts converting
+	writeReg(fd,0x40);
+	// tell the AD7705 to read the data register (16 bits)
+	writeReg(fd,0x39);
+	return 1; 
+
+}
+int adreset(void){
+	// resets the AD7705 so that it expects a write to the communication register
+        //printf("sending reset\n");
+	writeReset(fd);
+	return 1;
+}
 int main(int argc, char *argv[])
 {
 	int ret = 0;
@@ -167,25 +187,15 @@ int main(int argc, char *argv[])
 	// get a file descriptor for the GPIO pin
 	sysfs_fd = gpio_fd_open(drdy_GPIO);
 
-	// resets the AD7705 so that it expects a write to the communication register
-        printf("sending reset\n");
-	writeReset(fd);
+
 
 	
 
 	// we read data in an endless loop and display it
 	// this needs to run in a thread ideally
 	while (1) {
-	// tell the AD7705 that the next write will be to the clock register
-	writeReg(fd,0x21);
-	// write 00001100 : CLOCKDIV=1,CLK=1,expects 4.9152MHz input clock
-	writeReg(fd,0x0C);
-
-	// tell the AD7705 that the next write will be the setup register
-	writeReg(fd,0x11);
-	// intiates a self calibration and then after that starts converting
-	writeReg(fd,0x40);
-
+	 int r = adrest();	
+	 int c = ch2();
 	  // let's wait for data for max one second
 	  ret = gpio_poll(sysfs_fd,1000);
 	  if (ret<1) {
