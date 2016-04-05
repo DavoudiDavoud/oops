@@ -166,10 +166,10 @@ int main(int argc, char *argv[])
 	gpio_set_edge(drdy_GPIO,"falling");
 	// get a file descriptor for the GPIO pin
 	sysfs_fd = gpio_fd_open(drdy_GPIO);
-	while(1){
+	
 	int value2;
 	int value1;
-	
+	while(1){
 	writeReset(fd);
 
 	writeReg(fd,0x21);
@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
 	
-	volatile int count = 10;
+	volatile int count = 10000;
 	
 
 	// we read data in an endless loop and display it
@@ -200,6 +200,8 @@ int main(int argc, char *argv[])
 	  writeReg(fd,0x39);
 	  // read the data register by performing two 8 bit reads
 	  value2 = readData(fd)-0x8000;
+	  fprintf(stderr,"datach2 = %d  count  = %d     \r",value2, count);
+
 		// if stdout is redirected to a file or pipe, output the data
 		
 	}
@@ -214,7 +216,7 @@ int main(int argc, char *argv[])
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
 	
-	count = 10;
+	count = 10000;
 	
 
 	// we read data in an endless loop and display it
@@ -233,10 +235,11 @@ int main(int argc, char *argv[])
 	  writeReg(fd,0x38);
 	  // read the data register by performing two 8 bit reads
 	  value1 = readData(fd)-0x8000;
+          fprintf(stderr,"datach2 = %d  count = %d    \r",value1,count);
+
 		// if stdout is redirected to a file or pipe, output the data
 		
 	}
-	fprintf(stderr,"datach2 = %d  datach1  = %d     \r",value2, value1);
 	}
 	close(fd);
 	gpio_fd_close(sysfs_fd);
