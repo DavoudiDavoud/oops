@@ -166,7 +166,10 @@ int main(int argc, char *argv[])
 	gpio_set_edge(drdy_GPIO,"falling");
 	// get a file descriptor for the GPIO pin
 	sysfs_fd = gpio_fd_open(drdy_GPIO);
-
+	while(1){
+	int value2;
+	int value1;
+	
 	writeReset(fd);
 
 	writeReg(fd,0x21);
@@ -178,7 +181,7 @@ int main(int argc, char *argv[])
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
 	
-	volatile int count = 50000;
+	volatile int count = 10;
 	
 
 	// we read data in an endless loop and display it
@@ -196,8 +199,7 @@ int main(int argc, char *argv[])
 	  // tell the AD7705 to read the data register (16 bits)
 	  writeReg(fd,0x39);
 	  // read the data register by performing two 8 bit reads
-	  int value = readData(fd)-0x8000;
-		fprintf(stderr,"datach2 = %d  count1 = %d     \r",value, count);
+	  value2 = readData(fd)-0x8000;
 		// if stdout is redirected to a file or pipe, output the data
 		if( no_tty )
 		{
@@ -216,7 +218,7 @@ int main(int argc, char *argv[])
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
 	
-	count = 50000;
+	count = 10;
 	
 
 	// we read data in an endless loop and display it
@@ -234,8 +236,7 @@ int main(int argc, char *argv[])
 	  // tell the AD7705 to read the data register (16 bits)
 	  writeReg(fd,0x38);
 	  // read the data register by performing two 8 bit reads
-	  int value = readData(fd)-0x8000;
-		fprintf(stderr,"datach1 = %d count2 = %d    \r",value,count);
+	  value1 = readData(fd)-0x8000;
 		// if stdout is redirected to a file or pipe, output the data
 		if( no_tty )
 		{
@@ -243,7 +244,8 @@ int main(int argc, char *argv[])
 			fflush(stdout);
 		}
 	}
-	
+	fprintf(stderr,"datach2 = %d  datach3  = %d     \r",value2, value1);
+	}
 	close(fd);
 	gpio_fd_close(sysfs_fd);
 
