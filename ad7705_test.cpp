@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 	// we read data in an endless loop and display it
 	// this needs to run in a thread ideally
 	while (1) {
-	 int r = adrest(fd);	
+	 int r = adreset(fd);	
 	 int c = ch2(fd);
 	  // let's wait for data for max one second
 	  ret = gpio_poll(sysfs_fd,1000);
