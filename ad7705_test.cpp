@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
 	
-	int count = 5;
+	int count = 1000;
 	
 
 	// we read data in an endless loop and display it
@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
 	while (count) {
 	
 	
-	 
+	 count = count -1;
 	  // let's wait for data for max one second
 	  ret = gpio_poll(sysfs_fd,1000);
 	  if (ret<1) {
@@ -197,8 +197,8 @@ int main(int argc, char *argv[])
 	  writeReg(fd,0x39);
 	  // read the data register by performing two 8 bit reads
 	  int value = readData(fd)-0x8000;
-		fprintf(stderr,"data2 = %d       \r",value);
-		printf = ("c = %d",count);
+		fprintf(stderr,"data = %d       \r",value);
+	        fprintf(stderr,"count: %d\n",count);
 		// if stdout is redirected to a file or pipe, output the data
 		if( no_tty )
 		{
@@ -217,14 +217,14 @@ int main(int argc, char *argv[])
 	// intiates a self calibration and then after that starts converting
 	writeReg(fd,0x40);
 	
-	count = 5;
+	count = 1000;
 	
 
 	// we read data in an endless loop and display it
 	// this needs to run in a thread ideally
 	while (count) {
 	
-	
+	count = count -1;
 	 
 	  // let's wait for data for max one second
 	  ret = gpio_poll(sysfs_fd,1000);
@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
 	  // read the data register by performing two 8 bit reads
 	  int value = readData(fd)-0x8000;
 		fprintf(stderr,"data2 = %d       \r",value);
-		printf = ("c = %d",count);
+	        fprintf(stderr,"count: %d\n",count);
 		// if stdout is redirected to a file or pipe, output the data
 		if( no_tty )
 		{
