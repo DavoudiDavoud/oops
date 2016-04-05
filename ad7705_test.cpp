@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
 	  writeReg(fd,0x39);
 	  // read the data register by performing two 8 bit reads
 	  value2 = readData(fd)-0x8000;
-	  fprintf(stderr,"datach2 = %d  count  = %d     \r",value2, count);
+	  fprintf(stderr,"datach2 = %d  count2 = %d     \r",value2, count);
 
 		// if stdout is redirected to a file or pipe, output the data
 		
@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
 	  writeReg(fd,0x38);
 	  // read the data register by performing two 8 bit reads
 	  value1 = readData(fd)-0x8000;
-          fprintf(stderr,"datach2 = %d  count = %d    \r",value1,count);
+          fprintf(stderr,"datach1 = %d  count1 = %d    \r",value1,count);
 
 		// if stdout is redirected to a file or pipe, output the data
 		
